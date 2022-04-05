@@ -1,21 +1,30 @@
 <template>
   <v-row
     align="center"
-    class="list px-3 pt-5 mx-auto"
-    justify="space-between">
-    <v-col
-      cols="12"
-      md="10">
-      <v-text-field
-        v-model="title"
-        label="Search by Title" />
-    </v-col>
-    <v-col
-      cols="12"
-      md="auto">
-      <v-btn small>
-        Search
-      </v-btn>
+    class="list px-3 pt-5 mx-auto">
+    <v-col cols="12">
+      <form @submit.prevent="retrieveTutorials()">
+        <v-row
+          justify="space-between"
+          align="baseline">
+          <v-col
+            cols="12"
+            md="10">
+            <v-text-field
+              v-model="title"
+              label="Search by Title" />
+          </v-col>
+          <v-col
+            cols="12"
+            md="auto">
+            <v-btn
+              small
+              @click="retrieveTutorials()">
+              Search
+            </v-btn>
+          </v-col>
+        </v-row>
+      </form>
     </v-col>
     <v-col
       cols="12"
@@ -88,7 +97,7 @@ export default {
   methods: {
     async retrieveTutorials () {
       try {
-        const { data } = await TutorialsService.getAll()
+        const { data } = await TutorialsService.findByTitle(this.title)
         this.tutorials = data.map((t) => {
           return {
             id: t.id,
@@ -98,7 +107,22 @@ export default {
           }
         })
       } catch (error) {
-        console.error(error)
+        console.error('retrieveTutorials', error)
+        alert('Error!')
+      }
+    },
+    editTutorial (id) {
+      this.$router.push({ name: 'TutorialDetail', params: { id } })
+    },
+    async deleteTutorial (id) {
+      try {
+        if (confirm('Are you sure?')) {
+          await TutorialsService.deleteTutorial(id)
+          alert('Delete success!')
+        }
+        this.retrieveTutorials()
+      } catch (error) {
+        console.error('deleteTutorial', error)
         alert('Error!')
       }
     }

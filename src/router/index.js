@@ -1,14 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Tutorials from '../views/Tutorials/Tutorials.vue'
+import TutorialDetail from '../views/Tutorials/TutorialDetail.vue'
+import AddTutorial from '../views/Tutorials/AddTutorial.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/tutorials',
     name: 'Tutorials',
     component: Tutorials
+  },
+  {
+    path: '/tutorials/add',
+    name: 'AddTutorial',
+    component: AddTutorial
+  },
+  {
+    path: '/tutorials/:id',
+    name: 'TutorialDetail',
+    component: TutorialDetail
   }
 ]
 
