@@ -37,18 +37,31 @@
           :headers="headers"
           :items="tutorials"
           hide-default-footer>
+          <template #[`item.add`]="{ item }">
+            <v-btn
+              color="success"
+              icon
+              @click="addToCart(item.id)">
+              <v-icon> mdi-plus </v-icon>
+            </v-btn>
+          </template>
           <template #[`item.actions`]="{ item }">
-            <v-icon
+            <v-btn
               class="mr-2"
-              small
+              icon
               @click="editTutorial(item.id)">
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
+              <v-icon small>
+                mdi-pencil
+              </v-icon>
+            </v-btn>
+            <v-btn
+              color="error"
+              icon
               @click="deleteTutorial(item.id)">
-              mdi-delete
-            </v-icon>
+              <v-icon small>
+                mdi-delete
+              </v-icon>
+            </v-btn>
           </template>
         </v-data-table>
       </v-card>
@@ -68,6 +81,12 @@ export default {
       title: '',
       headers: [
         {
+          text: '',
+          align: 'center',
+          sortable: false,
+          value: 'add'
+        },
+        {
           text: 'Title',
           align: 'start',
           sortable: false,
@@ -86,6 +105,7 @@ export default {
         {
           text: 'Actions',
           value: 'actions',
+          align: 'center',
           sortable: false
         }
       ]
@@ -95,6 +115,26 @@ export default {
     this.retrieveTutorials()
   },
   methods: {
+    addToCart (tutorialId) {
+      if (!localStorage.getItem('cart')) {
+        localStorage.setItem('cart', JSON.stringify([]))
+      }
+
+      const item = this.tutorials.find((item) => item.id === tutorialId)
+      const cartItems = JSON.parse(localStorage.getItem('cart'))
+      const itemInCart = cartItems.findIndex((cartItem) => cartItem.id === item.id)
+
+      if (itemInCart !== -1) {
+        cartItems[itemInCart].amount += 1
+      } else {
+        cartItems.push({
+          ...item,
+          amount: 1
+        })
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cartItems))
+    },
     async retrieveTutorials () {
       try {
         const { data } = await TutorialsService.findByTitle(this.title)

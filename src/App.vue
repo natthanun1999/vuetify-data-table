@@ -9,7 +9,12 @@
         class="mr-2">
         Tutorials
       </v-btn>
-      <v-btn to="/tutorials/add" > Add </v-btn>
+      <v-btn
+        to="/tutorials/add"
+        class="mr-2">
+        Add
+      </v-btn>
+      <v-btn to="/cart"> Cart </v-btn>
     </v-app-bar>
 
     <v-main>
